@@ -1,0 +1,11 @@
+[12Jan2020 11:49:10.850] [Client thread/ERROR] [net.minecraft.client.resources.ResourceIndex/]: Can't find the resource index file: assets\indexes\1.14.json
+[12Jan2020 11:49:10.991] [Client thread/INFO] [net.minecraft.client.Minecraft/]: Setting user: Player690
+[12Jan2020 11:49:18.485] [Client thread/INFO] [net.minecraft.client.Minecraft/]: LWJGL Version: 3.2.2 build 10
+[12Jan2020 11:49:19.759] [Client thread/ERROR] [net.minecraft.client.Minecraft/]: Couldn't set icon
+java.io.FileNotFoundException: icons/icon_16x16.png
+	at net.minecraft.resources.VanillaPack.getResourceStream(VanillaPack.java:90) ~[forge-1.14.4-28.1.0_mapped_snapshot_20190719-1.14.3.jar:?]
+	at net.minecraft.client.Minecraft.init(Minecraft.java:436) [forge-1.14.4-28.1.0_mapped_snapshot_20190719-1.14.3.jar:?]
+	at net.minecraft.client.Minecraft.run(Minecraft.java:365) [forge-1.14.4-28.1.0_mapped_snapshot_20190719-1.14.3.jar:?]
+	at net.minecraft.client.main.Main.main(SourceFile:155) [forge-1.14.4-28.1.0_mapped_snapshot_20190719-1.14.3.jar:?]
+	at mcp.client.Start.main(Start.java:17) [forge-1.14.4-28.1.0_mapped_snapshot_20190719-1.14.3.jar:?]
+[12Jan2020 11:49:20.685] [Client thread/DEBUG] [net.minecraftforge.fml.ForgeI18n/CORE]: Loading I18N data entries: 4466

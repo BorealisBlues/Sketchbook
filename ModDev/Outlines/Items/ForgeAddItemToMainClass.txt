@@ -1,0 +1,43 @@
+package ^^Package Name^^
+
+import ^^Imports^^
+
+public class ^^ModName^^ 
+	{
+	public static ^^ModName^^ instance;
+	public static final String modid = "^^ModID^^";
+	private static final Logger logger = LogManager.getLogger(modid);
+	
+	public ^^ModName^^() 
+		{
+		instance = this;
+		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::^^CommonSetup^^);
+		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::^^ClientSetup^^);
+		MinecraftForge.EVENT_BUS.register(this);
+		}
+	private void ^^CommonSetup^^(final FMLCommonSetupEvent event)
+		{
+		logger.info("^^CommonSetupLog^^");
+		}
+	private void ^^ClientSetup^^ (final FMLClientSetupEvent event)
+		{
+		logger.info("^^ClientSetupLog^^);
+		}
+	@Mod.EventBusSubscriber(bus=Mod.EventBusSubcriber.Bus.MOD)
+	public static class ^^RegistryEvent^^
+		{
+		@SubscribeEvent
+		public static void ^^RegisterItemsFunction^^(finalRegistryEvent.Register<Item> event)
+			{
+			event.getRegistry().registerAll
+				(
+				****** One Line Per Item Added ******
+				ItemList.^^ItemName^^ = new Item(new Item.Properties().group(ItemGroup.^^ItemGroup^^)).setRegistryName(new ResourceLocation(modid, ^^ItemRegistryName^^)),
+				);
+			}
+		}
+	}
+
+
+VARIABLES NEEDED: PackageName, Imports, ModName, ModID, CommonSetup, ClientSetup, RegisterItemsFunction, ItemName, ItemGroup, ItemRegistryName
+		

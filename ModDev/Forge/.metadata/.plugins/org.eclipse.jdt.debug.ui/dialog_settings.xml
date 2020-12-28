@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="org.eclipse.jdt.debug.ui.MAIN_METHOD_SELECTION_DIALOG">
+		<item key="ShowStatusLine" value="true"/>
+		<item key="History" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#x0D;&#x0A;&lt;History&gt;&#x0D;&#x0A;&lt;historyRootNode&gt;&#x0D;&#x0A;&lt;infoNode&gt;=TutorialMod/C:\/Users\/user-pc\/.gradle\/caches\/forge_gradle\/minecraft_user_repo\/net\/minecraftforge\/forge\/1.14.4-28.1.0_mapped_snapshot_20190719-1.14.3\/forge-1.14.4-28.1.0_mapped_snapshot_20190719-1.14.3.jar&amp;lt;mcp.client(Start.class[Start&lt;/infoNode&gt;&#x0D;&#x0A;&lt;infoNode&gt;=TutorialMod/C:\/Users\/user-pc\/.gradle\/caches\/modules-2\/files-2.1\/cpw.mods\/modlauncher\/3.2.0\/7668dcaa33915565351fce1ccf462792255941fd\/modlauncher-3.2.0.jar&amp;lt;cpw.mods.modlauncher(Launcher.class[Launcher&lt;/infoNode&gt;&#x0D;&#x0A;&lt;infoNode&gt;=TutorialMod/C:\/Users\/user-pc\/.gradle\/caches\/forge_gradle\/minecraft_user_repo\/net\/minecraftforge\/forge\/1.14.4-28.1.0_mapped_snapshot_20190719-1.14.3\/forge-1.14.4-28.1.0_mapped_snapshot_20190719-1.14.3.jar&amp;lt;net.minecraftforge.userdev(LaunchTesting.class[LaunchTesting&lt;/infoNode&gt;&#x0D;&#x0A;&lt;infoNode&gt;=firstmod/C:\/Users\/user-pc\/.gradle\/caches\/modules-2\/files-2.1\/org.ow2.asm\/asm-util\/6.2\/a9690730f92cc79eeadc20e400ebb41eccce10b1\/asm-util-6.2.jar=/gradle_used_by_scope=/main,test=/&amp;lt;org.objectweb.asm.util(ASMifier.class[ASMifier&lt;/infoNode&gt;&#x0D;&#x0A;&lt;infoNode&gt;=firstmod/C:\/Users\/user-pc\/.gradle\/caches\/forge_gradle\/minecraft_user_repo\/net\/minecraftforge\/forge\/1.14.4-28.1.0_mapped_snapshot_20190719-1.14.3\/forge-1.14.4-28.1.0_mapped_snapshot_20190719-1.14.3.jar=/gradle_used_by_scope=/main,test=/&amp;lt;mcp.client(Start.class[Start&lt;/infoNode&gt;&#x0D;&#x0A;&lt;/historyRootNode&gt;&#x0D;&#x0A;&lt;/History&gt;"/>
+		<section name="DialogBoundsSettings">
+			<item key="DIALOG_HEIGHT" value="500"/>
+			<item key="DIALOG_WIDTH" value="600"/>
+			<item key="DIALOG_X_ORIGIN" value="225"/>
+			<item key="DIALOG_Y_ORIGIN" value="77"/>
+			<item key="DIALOG_FONT_NAME" value="1|Segoe UI|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI"/>
+		</section>
+	</section>
+</section>

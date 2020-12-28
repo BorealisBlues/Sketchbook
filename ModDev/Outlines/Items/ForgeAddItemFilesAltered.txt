@@ -1,0 +1,5 @@
+src\main\java\^^MODNAME^^\^^MODID^^\^^MAIN.JAVA^^
+src\main\java\^^MODNAME^^\^^MODID^^\lists\ItemList.java
+src\main\resources\assets\^^MODNAME^^\lang\*
+src\main\resources\assets\^^MODNAME^^\models\item\^^ITEMNAME^^.json
+src\main\resources\assets\^^MODNAME^^\textures\item\^^ITEMNAME^^.png
