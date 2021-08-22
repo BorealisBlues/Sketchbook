@@ -1,8 +1,16 @@
 import tweepy
 import json
-
+import os
 from dotenv import load_dotenv
 
+
+## TO DO
+## ADD IN DISCORD FRAMEWORK
+## STORE LAST ~20~ TWEETS IN A LIST TO BE CHECKED AGAINST FOR KEYWORDS
+## MAKE ACCESSIBLE
+## AQUIRE TWITTER CREDENTIALS
+## ADD IN SIGNAL FRAMEWORK
+## USER SETTABLE TWITTER USERS TO FOLLOW AND TRIGGER WORDS
 
 ## Environment Variables
 load_dotenv()
@@ -19,7 +27,7 @@ auth.set_access_token(ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
 api = tweepy.API(auth, wait_on_rate_limit=True)
 
 ## Create a tweet
-api.update_status('tweepy Test')
+#api.update_status('tweepy Test')
 
 ## timeline retrieval
 timeline = api.home_timeline()
@@ -35,7 +43,7 @@ print(user.location)
 
 print('last 20 tweets:')
 for tweet in user.timeline():
-    print print(f'{tweet.user.name} said {tweet.text}')
+    print(f'{tweet.user.name} said {tweet.text}')
 
 ## steaming tester
 class MyStreamListener(tweepy.StreamListener):
