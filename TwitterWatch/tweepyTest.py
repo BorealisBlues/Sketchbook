@@ -1,5 +1,4 @@
 import tweepy
-import json
 import os
 from dotenv import load_dotenv
 
@@ -18,6 +17,11 @@ CONSUMER_KEY = os.getenv('CONSUMER_KEY')
 CONSUMER_SECRET = os.getenv('CONSUMER_SECRET')
 ACCESS_KEY = os.getenv('ACCESS_KEY')
 ACCESS_SECRET = os.getenv('ACCESS_TOKEN_SECRET')
+
+## TESTING VARIABLES
+
+wordlist = ['test', 'police']
+
 
 
 def Authorize():
@@ -39,6 +43,12 @@ def GetOwnTimeline():
     for tweet in timeline:
         print(f'{tweet.user.name} said {tweet.text}') # calls the last 20 tweets
 
+def GetUserID(user):
+    userobj = api.get_user(user)
+    print(f'the user {user} corresponds to username: {userobj.name}')
+    print(f'the user {user} corresponds to user ID: {userobj.id}')
+    return userobj.id, userobj.name
+
 def GetUserTimeline(user):
     ## Retrieves timeline of another user
     user = api.get_user(user)
@@ -50,9 +60,13 @@ def GetUserTimeline(user):
 
     print('last 20 tweets:')
     for tweet in user.timeline():
-        print(f'{tweet.user.name} said {tweet.text}')
+        #print(f'{tweet.user.name} said {tweet.text}')
+        if CheckKeyWords(wordlist, tweet.text):
+            print(f'MATCH FOUND {tweet.user.name}:{tweet.text}')
+        else:
+            print(f'NO MATCH {tweet.user.name}:{tweet.text}')
 
-def StartStream():
+def StartStream(userid):
     ## steaming tester
     class MyStreamListener(tweepy.StreamListener):
         def __init__(self, api):
@@ -60,15 +74,25 @@ def StartStream():
             self.me = api.me()
 
         def on_status(self, tweet): #runs when a tweet matching the filter is detected
-            print(f'{tweet.user.name}:{tweet.text}')
+            if CheckKeyWords(wordlist, tweet.text):
+                print(f'MATCH FOUND {tweet.user.name}:{tweet.text}')
+            else:
+                print(f'NO MATCH {tweet.user.name}:{tweet.text}')
 
         def on_error(self, status):
             print ("error detected", status)
     tweets_listener = MyStreamListener(api)
     stream = tweepy.Stream(api.auth, tweets_listener)
-    stream.filter(follow=['1269039873488535555'], is_async=True)
+    stream.filter(follow=[str(userid)], is_async=True)
 
-
+def CheckKeyWords(wordlist, tweet):
+    for word in wordlist:
+        if word.lower() in tweet.lower():
+            return True
+        else:
+            return False
+        
 api = Authorize()
-GetUserTimeline('scanthepolice')
-StartStream()
+userid, username = GetUserID('scanthepolice')
+GetUserTimeline(userid)
+StartStream(userid)
