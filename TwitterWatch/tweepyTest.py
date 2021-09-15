@@ -5,7 +5,6 @@ from dotenv import load_dotenv
 
 ## TO DO
 ## ADD IN DISCORD FRAMEWORK
-## STORE LAST ~20~ TWEETS IN A LIST TO BE CHECKED AGAINST FOR KEYWORDS
 ## MAKE ACCESSIBLE
 ## ADD IN SIGNAL FRAMEWORK
 ## USER SETTABLE TWITTER USERS TO FOLLOW AND TRIGGER WORDS
@@ -69,7 +68,7 @@ def GetUserTimeline(user):
 def StartStream(userid):
     ## steaming tester
     class MyStreamListener(tweepy.StreamListener):
-        def __init__(self, api):
+        def __init__(self, api): #runs on initialization
             self.api = api
             self.me = api.me()
 
@@ -79,7 +78,7 @@ def StartStream(userid):
             else:
                 print(f'NO MATCH {tweet.user.name}:{tweet.text}')
 
-        def on_error(self, status):
+        def on_error(self, status): #runs when an error occurs
             print ("error detected", status)
     tweets_listener = MyStreamListener(api)
     stream = tweepy.Stream(api.auth, tweets_listener)
