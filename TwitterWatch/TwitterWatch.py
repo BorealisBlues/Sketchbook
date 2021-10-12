@@ -37,6 +37,7 @@ wordList = ['test', 'police']
 userList = ['scanthepolice']
 version = '0.0.1'
 enableLogging = True
+isDebug = True
 
 
 ## ---------------------------
@@ -57,27 +58,31 @@ def GetUserID(user):
     print(f'the user {user} corresponds to user ID: {userobj.id}')
     return userobj.id
 
-async def GetUserTimeline(user, ctx):
+async def GetUserTimeline(user, ctx, doCheck):
     ## Retrieves timeline of another user
-        print('User details:')
-        print(user.name)
-        print(user.description)
-        print(user.location)
-        print('\n')
-    
-        print('last 20 tweets:')
-        for tweet in user.timeline():
-            #print(f'{tweet.user.name} said {tweet.text}')
-            if CheckKeyWords(wordList, tweet.text):
+    user = api.get_user(user)
+    print('User details:')
+    print(user.name)
+    print(user.description)
+    print(user.location)
+    print('\n')
+
+    print('last 20 tweets:')
+    for tweet in user.timeline():
+        #print(f'{tweet.user.name} said {tweet.text}')
+        if CheckKeyWords(wordList, tweet.text):
+            if enableLogging:
                 print(f'MATCH FOUND {tweet.user.name}:{tweet.text}')
-                await ctx.send(f'MATCH FOUND {tweet.user.name}:{tweet.text}')
-    
-            else:
+            await ctx.send(f'MATCH FOUND {tweet.user.name}:{tweet.text}')
+
+        else:
+            if enableLogging:
                 print(f'NO MATCH {tweet.user.name}:{tweet.text}')
+            if isDebug: #Only send non-matches if isDebug=True
                 await ctx.send(f'NO MATCH {tweet.user.name}:{tweet.text}')
 
 
-async def StartStream(userid, ctx):
+async def StartStream(userid, ctx, doCheck):
     ## steaming tester
     class MyStreamListener(tweepy.StreamListener):
         def __init__(self, api): #runs on initialization
@@ -86,11 +91,14 @@ async def StartStream(userid, ctx):
 
         async def on_status(self, tweet): #runs when a tweet matching the filter is detected
             if CheckKeyWords(wordlist, tweet.text):
-                print(f'MATCH FOUND {tweet.user.name}:{tweet.text}')
+                if enableLogging:
+                    print(f'MATCH FOUND {tweet.user.name}:{tweet.text}')
                 await ctx.send(f'MATCH FOUND {tweet.user.name}:{tweet.text}')
             else:
-                print(f'NO MATCH {tweet.user.name}:{tweet.text}')
-                await ctx.send(f'NO MATCH {tweet.user.name}:{tweet.text}')
+                if enableLogging:
+                    print(f'NO MATCH {tweet.user.name}:{tweet.text}')
+                if isDebug:
+                    await ctx.send(f'NO MATCH {tweet.user.name}:{tweet.text}')
 
         def on_error(self, status): #runs when an error occurs
             print ("error detected", status)
@@ -156,7 +164,7 @@ async def getUsers(ctx):
      await ctx.send(f'Current list of users is {userList}')
 
 @bot.command(name='startWatching', help='start watching a given user')
-async def startWatching(ctx, user, checkKeywords=True):
+async def startWatching(ctx, user, doCheck=True):
     ## startWatching will initiate a stream for a given user
     try:
         userid = GetUserID(user)
@@ -164,8 +172,8 @@ async def startWatching(ctx, user, checkKeywords=True):
         print(f"an error has occoured! {e}")
         await ctx.send(f"an error has occoured! {e}")
     else:
-        await GetUserTimeline(userid, ctx)
-        await StartStream(userid, ctx)
+        await GetUserTimeline(userid, ctx, doCheck)
+        await StartStream(userid, ctx, doCheck)
 
 @bot.command(name='setChannel', help='sets the channel to send updates to')
 async def setChannel(ctx):
