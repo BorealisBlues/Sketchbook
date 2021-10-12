@@ -10,6 +10,8 @@ from discord.ext import commands
 ## MAKE ACCESSIBLE
 ## ADD IN SIGNAL FRAMEWORK
 ## USER SETTABLE TWITTER USERS TO FOLLOW AND TRIGGER WORDS
+## RESTRUCTURE INSTANCE OF STEAMER TO HAVE CHECK KEYWORD FLAGS
+    ## FOR USE IN PASSING *ALL* TWEETS MADE BY A USER
 
 ## ADDITIONAL ACCOUNTS TO CHECK -- WaywardStreamer // ChuckModi
 
@@ -134,7 +136,7 @@ async def setKeyWords(ctx, keywords):
 @bot.command(name='checkKeywords', help='replies with a list of current keywords')
 async def getKeywords(ctx):
     logCommand(ctx)
-    await ctx.send(f'Current list of keywords is {wordlist}')
+    await ctx.send(f'Current list of keywords is {wordList}')
     
 @bot.command(name='setUsers', help='sets a list of twitter users to check tweets of')
 async def setUsers(ctx, users):
@@ -142,12 +144,18 @@ async def setUsers(ctx, users):
     userList = keywords.split(',')
     await ctx.send(f'Current list of users is now {userList}')
     
-@bot.command(name='getUsers')
+@bot.command(name='getUsers', help='replies with a list of current users')
+async def getUsers(ctx):
+     logCommand(ctx)
+     await ctx.send(f'Current list of users is {userList}')
+
+
+
 def main():
     
     ## TWITTER RUN BLOCK
     api = Authorize()
-    userid, username = GetUserID('scanthepolice')
+    userid = GetUserID('scanthepolice')
     GetUserTimeline(userid)
     StartStream(userid)
     
