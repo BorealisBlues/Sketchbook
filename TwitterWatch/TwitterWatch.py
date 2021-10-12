@@ -9,7 +9,7 @@ from discord.ext import commands
 ## ADD IN DISCORD FRAMEWORK
 ## MAKE ACCESSIBLE
 ## ADD IN SIGNAL FRAMEWORK
-## USER SETTABLE TWITTER USERS TO FOLLOW AND TRIGGER WORDS
+## USER SETTABLE TWITTER USERS TO FOLLOW AND SENTINEL WORDS
 ## RESTRUCTURE INSTANCE OF STEAMER TO HAVE CHECK KEYWORD FLAGS
     ## FOR USE IN PASSING *ALL* TWEETS MADE BY A USER
 
@@ -24,18 +24,20 @@ CONSUMER_KEY = os.getenv('CONSUMER_KEY')
 CONSUMER_SECRET = os.getenv('CONSUMER_SECRET')
 ACCESS_KEY = os.getenv('ACCESS_KEY')
 ACCESS_SECRET = os.getenv('ACCESS_TOKEN_SECRET')
+CHANNEL_ID = os.getenv('CHANNEL_ID')
 
 
 ## DISCORD ENV BLOCK
 TOKEN = os.getenv('DISCORD_TOKEN')
 GUILD = os.getenv('DISCORD_GUILD')
 
-## TESTING VARIABLES
+## GLOBAL VARIABLES
 
 wordList = ['test', 'police']
 userList = ['scanthepolice']
 version = '0.0.1'
 enableLogging = True
+
 
 ## ---------------------------
 ## TWITTER BLOCK OF FUNCTIONS
@@ -53,37 +55,42 @@ def GetUserID(user):
     userobj = api.get_user(user)
     print(f'the user {user} corresponds to username: {userobj.name}')
     print(f'the user {user} corresponds to user ID: {userobj.id}')
-    return userobj.id, userobj.name
+    return userobj.id
 
-def GetUserTimeline(user):
+async def GetUserTimeline(user, ctx):
     ## Retrieves timeline of another user
-    user = api.get_user(user)
-    print('User details:')
-    print(user.name)
-    print(user.description)
-    print(user.location)
-    print('\n')
+        print('User details:')
+        print(user.name)
+        print(user.description)
+        print(user.location)
+        print('\n')
+    
+        print('last 20 tweets:')
+        for tweet in user.timeline():
+            #print(f'{tweet.user.name} said {tweet.text}')
+            if CheckKeyWords(wordList, tweet.text):
+                print(f'MATCH FOUND {tweet.user.name}:{tweet.text}')
+                await ctx.send(f'MATCH FOUND {tweet.user.name}:{tweet.text}')
+    
+            else:
+                print(f'NO MATCH {tweet.user.name}:{tweet.text}')
+                await ctx.send(f'NO MATCH {tweet.user.name}:{tweet.text}')
 
-    print('last 20 tweets:')
-    for tweet in user.timeline():
-        #print(f'{tweet.user.name} said {tweet.text}')
-        if CheckKeyWords(wordlist, tweet.text):
-            print(f'MATCH FOUND {tweet.user.name}:{tweet.text}')
-        else:
-            print(f'NO MATCH {tweet.user.name}:{tweet.text}')
 
-def StartStream(userid):
+async def StartStream(userid, ctx):
     ## steaming tester
     class MyStreamListener(tweepy.StreamListener):
         def __init__(self, api): #runs on initialization
             self.api = api
             self.me = api.me()
 
-        def on_status(self, tweet): #runs when a tweet matching the filter is detected
+        async def on_status(self, tweet): #runs when a tweet matching the filter is detected
             if CheckKeyWords(wordlist, tweet.text):
                 print(f'MATCH FOUND {tweet.user.name}:{tweet.text}')
+                await ctx.send(f'MATCH FOUND {tweet.user.name}:{tweet.text}')
             else:
                 print(f'NO MATCH {tweet.user.name}:{tweet.text}')
+                await ctx.send(f'NO MATCH {tweet.user.name}:{tweet.text}')
 
         def on_error(self, status): #runs when an error occurs
             print ("error detected", status)
@@ -106,17 +113,16 @@ def CheckKeyWords(wordlist, tweet):
 bot = commands.Bot(command_prefix='!')
 
 def logCommand(ctx):
-    #logCommand logs the command and author to the console
+    #logCommand logs the command and author to the console IF enableLogging is True
     if enableLogging:
         print(f'{ctx.author} has issued the {ctx.command} command!')
 
 @bot.event
 async def on_ready():
     # on_ready prints the connected guilds and members on connection
-    guild = discord.utils.get(bot.guilds, name=GUILD)
+    guild = discord.utils.get(bot.guilds)
     print(
-            f'{bot.user.name} is connected to the following guild: \n'
-            f'{guild.name}(id: {guild.id})'
+            f'connected to the following guild: \n {guild.name}(id: {guild.id})'
           )
     members = '\n - '.join([member.name for member in guild.members])
     print(f'Guild Members:\n - {members}')
@@ -149,17 +155,32 @@ async def getUsers(ctx):
      logCommand(ctx)
      await ctx.send(f'Current list of users is {userList}')
 
+@bot.command(name='startWatching', help='start watching a given user')
+async def startWatching(ctx, user, checkKeywords=True):
+    ## startWatching will initiate a stream for a given user
+    try:
+        userid = GetUserID(user)
+    except Exception as e:
+        print(f"an error has occoured! {e}")
+        await ctx.send(f"an error has occoured! {e}")
+    else:
+        await GetUserTimeline(userid, ctx)
+        await StartStream(userid, ctx)
 
-
+@bot.command(name='setChannel', help='sets the channel to send updates to')
+async def setChannel(ctx):
+    #setChannel should set the global variable for the channel to send updates to
+    updatesChannel=str(ctx.channel)
+    
 def main():
     
     ## TWITTER RUN BLOCK
-    api = Authorize()
-    userid = GetUserID('scanthepolice')
-    GetUserTimeline(userid)
-    StartStream(userid)
+
+    #userid = GetUserID('scanthepolice')
+    #GetUserTimeline(userid)
+    #StartStream(userid)
     
     ## DISCORD RUN BLOCK
     bot.run(TOKEN)
-
+api = Authorize()
 main()
