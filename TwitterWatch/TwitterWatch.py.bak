@@ -1,8 +1,9 @@
-import tweepy                   ## library for twitter interactions
-import os                       ## library for os interactions
-from dotenv import load_dotenv  ## library for env variables
-import discord                  ## library for discord interactions
-from discord.ext import commands## extension for discord interactions
+import tweepy
+import os
+from dotenv import load_dotenv
+
+import discord
+from discord.ext import commands
 
 ## TO DO
 ## DISCORD FRAMEWORK
@@ -32,6 +33,7 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 GUILD = os.getenv('DISCORD_GUILD')
 
 ## GLOBAL VARIABLES
+
 wordList = ['test', 'police']
 userList = ['scanthepolice']
 version = '0.0.1'
@@ -80,31 +82,30 @@ async def GetUserTimeline(user, ctx, doCheck):
             if isDebug: #Only send non-matches if isDebug=True
                 await ctx.send(f'NO MATCH {tweet.user.name}:{tweet.text}')
 
-class MyStreamListener(tweepy.StreamListener):
-    def __init__(self, api, ctx): #runs on initialization
-        self.api = api
-        self.me = api.me()
-        self.ctx = ctx
-
-    async def on_status(self, tweet): #runs when a tweet matching the filter is detected
-        if CheckKeyWords(wordlist, tweet.text):
-            if enableLogging:
-                print(f'MATCH FOUND {tweet.user.name}:{tweet.text}')
-            await self.ctx.send(f'MATCH FOUND {tweet.user.name}:{tweet.text}')
-        else:
-            if enableLogging:
-                print(f'NO MATCH {tweet.user.name}:{tweet.text}')
-            if isDebug:
-                await self.ctx.send(f'NO MATCH {tweet.user.name}:{tweet.text}')
-
-    def on_error(self, status): #runs when an error occurs
-        print ("error detected", status)
 
 async def StartStream(userid, ctx, doCheck):
-    tweets_listener = MyStreamListener(api, ctx)
+    ## steaming tester
+    class MyStreamListener(tweepy.StreamListener):
+        def __init__(self, api): #runs on initialization
+            self.api = api
+            self.me = api.me()
+
+        async def on_status(self, tweet): #runs when a tweet matching the filter is detected
+            if CheckKeyWords(wordlist, tweet.text):
+                if enableLogging:
+                    print(f'MATCH FOUND {tweet.user.name}:{tweet.text}')
+                await ctx.send(f'MATCH FOUND {tweet.user.name}:{tweet.text}')
+            else:
+                if enableLogging:
+                    print(f'NO MATCH {tweet.user.name}:{tweet.text}')
+                if isDebug:
+                    await ctx.send(f'NO MATCH {tweet.user.name}:{tweet.text}')
+
+        def on_error(self, status): #runs when an error occurs
+            print ("error detected", status)
+    tweets_listener = MyStreamListener(api)
     stream = tweepy.Stream(api.auth, tweets_listener)
     stream.filter(follow=[str(userid)], is_async=True)
-    return stream
 
 def CheckKeyWords(wordlist, tweet):
     for word in wordlist:
@@ -119,8 +120,6 @@ def CheckKeyWords(wordlist, tweet):
 ## ---------------------------
 
 bot = commands.Bot(command_prefix='!')
-
-streamList = []
 
 def logCommand(ctx):
     #logCommand logs the command and author to the console IF enableLogging is True
@@ -175,7 +174,7 @@ async def startWatching(ctx, user, doCheck=True):
         await ctx.send(f"an error has occoured! {e}")
     else:
         await GetUserTimeline(userid, ctx, doCheck)
-        await streamList.append(StartStream(userid, ctx, doCheck))
+        await StartStream(userid, ctx, doCheck)
 
 @bot.command(name='setChannel', help='sets the channel to send updates to')
 async def setChannel(ctx):
@@ -191,8 +190,6 @@ def main():
     #StartStream(userid)
     
     ## DISCORD RUN BLOCK
-    bot.run(TOKEN)    
-
-
+    bot.run(TOKEN)
 api = Authorize()
 main()
